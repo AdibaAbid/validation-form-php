@@ -1,10 +1,13 @@
-<?php 
-$email = $name = $batch = ''; 
-$errors = array('email'=> '', 'name'=> '', 'batch'=> '');
+<?php
+include('./config/config.php');
+
+$email = $name = $passwd = ''; 
+$errors = array('email'=> '', 'name'=> '', 'batch'=> '', 'passwd'=> '');
+
 
 //Check validation
 
-if(isset($_POST['submit'])){
+if(isset($_POST['Signup'])){
 //Check email  
 if(empty($_POST['email'])) { 
   $errors['email']="An Email must be Required";
@@ -38,28 +41,37 @@ echo '}, 1000);</script>';
   }
 }
 
-//check batch name
+//check Password
 
-if(empty($_POST['batch-name'])) {
-// $batch = $_POST['batch-name'];
-$errors['batch'] = "Batch Name must be Required!";
+if(empty($_POST['password'])) {
+$errors['passwd'] = "Password Name must be Required!";
 echo '<script type="text/javascript">';
-echo 'setTimeout(function () { swal("OOPs!","Batch Name must be Required!", "warning");';
+echo 'setTimeout(function () { swal("OOPs!","Password must be Required!", "warning");';
 echo '}, 500);</script>';
 } 
 else{
-$batch = $_POST['batch-name'];
+$passwd = $_POST['password'];
 }
 if(!array_filter($errors)){
     echo '<script type="text/javascript">';
     echo 'setTimeout(function () { swal("Congratz","Successfully Sumit Info", "success");';
     echo '}, 500);</script>';
-    header('Location: index.php');
+
+
+$sql = "INSERT INTO userlogin(user_name, user_email, user_password)
+VALUES ('$name', '$email', '$passwd')";
+
+$response = mysqli_query($conn, $sql);
+ if($response){
+   $_SESSION['USER_LOGIN'] = $_POST['email'];
+   echo "successful";
+    header('Location: bookstodo.php');
+ }else{
+   echo 'data insert failed';
+ }
+   
 }
 }
-
-
-
 ?>
 
 
@@ -69,16 +81,16 @@ if(!array_filter($errors)){
 <?php include('templates/header.php')?>
 
 <section class="container grey-text ">
-    <h4 class="center">Add Information</h4>
+    <h4 class="center">Login</h4>
     <form action="add.php" method="POST" class=" deep-purple lighten-5 z-depth-2">
-        <label for="email" class="grey-text text-darken-4">Your Email:</label>
-        <input type="text" name="email" placeholder="Enter your email" value="<?php echo $email ?>">
         <label for=" name" class="grey-text text-darken-4">Your Name:</label>
         <input type="text" name="name" placeholder="Enter you name" value="<?php echo $name ?>">
-        <label for=" batch-name" class="grey-text text-darken-4">Batch Name:</label>
-        <input type="text" name="batch-name" placeholder="Enter your batch" value="<?php echo $batch ?>">
+        <label for="email" class="grey-text text-darken-4">Your Email:</label>
+        <input type="text" name="email" placeholder="Enter your email" value="<?php echo $email ?>">
+        <label for="password" class="grey-text text-darken-4">Password:</label>
+        <input type="password" name="password" placeholder="Enter your password" value="<?php echo $passwd ?>">
         <div class="center">
-            <input type="submit" value="submit" name="submit" class="btn light-blue darken-4 z-depth-0">
+            <input type="submit" value="login" name="Signup" class="btn light-blue darken-4 z-depth-0">
         </div>
     </form>
 </section>
