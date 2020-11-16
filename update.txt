@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+   
+    <title>Detail</title>
+</head>
+<body>
+<?php
+require 'config.php';
+$id = $_GET['id'];
+$sql = "select * from todos where todo_id = '$id'";
+$result = mysqli_query($conn,$sql);
+$row = mysqli_num_rows($result);
+while($row = mysqli_fetch_array($result))
+    {
+
+        $todoname=$row['todo_name'];
+       
+    }
+    if(isset($_POST['btnupdate']))
+    {
+        $qu= "update todos set todo_name ='".$_POST['txttodo']."'  where todo_id='$id'";
+         $res = mysqli_query($conn,$qu);
+         if($res)
+         {
+             header('location:todo.php');
+         }
+         else
+         {
+             echo mysqli_error($conn);
+         }
+    }
+?>
+<form method="post">
+<div style="padding:100px">
+
+<div class="form-group" >
+    <label for="exampleInputPassword1">TODO ID</label>
+    <input type="text" class="form-control" name="txtid" disabled value="<?php echo $id; ?>">
+  </div>
+<div class="form-group">
+    <label for="exampleInputPassword1">TODO Name</label>
+    <input type="text" class="form-control" name="txttodo" value="<?php echo $todoname; ?>">
+  </div>
+ 
+  <button type="submit" class="btn btn-primary" name="btnupdate">Update</button>
+  </div>
+</form>
+</body>
+</html>
